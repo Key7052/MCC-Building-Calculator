@@ -7,13 +7,141 @@
 </head>
 <body>
 <p> Credit to Jessie (@bibikuranushi on discord) for making the original spreadsheet which this is based off of. </p>
+<input type="number" id="pl" value = 100>
+<label for="pl"> Prestige Level (in terms of quadrillions) </label>
+<br>
+<input type="number" id="days" value = 20>
+<label for="days"> Days since ascension start (used for century egg) </label>
+<br>
+<input type="number" id="achievements" value = 550>
+<label for="achievements"> Number of achievements </label>
+<br>
+<br>
 <label>
-    <input type="checkbox" id="600 JSC">
+    <input type="checkbox" id="ambergris" checked>
+    Wrinkler Ambergris
+</label>
+<br>
+<br>
+<label>
+    <input type="checkbox" id="550 Biscuit" checked>
+    550 Building Biscuit
+</label>
+<br>
+<label>
+    <input type="checkbox" id="600 Biscuit">
+    600 Building Biscuit
+</label>
+<br>
+<label>
+    <input type="checkbox" id="650 Biscuit">
+    650 Building Biscuit
+</label>
+<br>
+<label>
+    <input type="checkbox" id="700 Biscuit">
+    700 Building Biscuit
+</label>
+<br>
+<br>
+<label>
+    <input type="checkbox" id="cookie1" checked>
+    Smile Cookies
+</label>
+<br>
+<label>
+    <input type="checkbox" id="cookie2" checked>
+    Kolachy Cookies
+</label>
+<br>
+<label>
+    <input type="checkbox" id="cookie3" checked>
+    Gomma Cookies
+</label>
+<br>
+<label>
+    <input type="checkbox" id="cookie4" checked>
+    Vegan Cookies
+</label>
+<br>
+<label>
+    <input type="checkbox" id="cookie5" checked>
+    Coyotas
+</label>
+<br>
+<label>
+    <input type="checkbox" id="cookie6" checked>
+    Frosted Sugar Cookies
+</label>
+<br>
+<label>
+    <input type="checkbox" id="cookie7" checked>
+    Marshmellow Sandwich Cookies
+</label>
+<br>
+<label>
+    <input type="checkbox" id="cookie8">
+    Web Cookies
+</label>
+<br>
+<label>
+    <input type="checkbox" id="cookie9">
+    Havreflarn
+</label>
+<br>
+<label>
+    <input type="checkbox" id="cookie10">
+    Alfajores
+</label>
+<br>
+<label>
+    <input type="checkbox" id="cookie11">
+    Gaufrettes
+</label>
+<br>
+<label>
+    <input type="checkbox" id="cookie12">
+    Cookie Bars
+</label>
+<br>
+<label>
+    <input type="checkbox" id="cookie13">
+    Snowball Cookies
+</label>
+<br>
+<label>
+    <input type="checkbox" id="cookie14">
+    Sequilhos
+</label>
+<br>
+<label>
+    <input type="checkbox" id="cookie15">
+    Hazelnut Swirlies
+</label>
+<br>
+<label>
+    <input type="checkbox" id="cookie16">
+    Spritz cookies
+</label>
+<br>
+<label>
+    <input type="checkbox" id="cookie17">
+    Mbatata
+</label>
+<br>
+<label>
+    <input type="checkbox" id="cookie18">
+    Sprignerles
+</label>
+<br>
+<br>
+<label>
+    <input type="checkbox" id="600 JSC" checked>
     600 Javascript Console Upgrade
 </label>
 <br>
 <label>
-    <input type="checkbox" id="550 CB">
+    <input type="checkbox" id="550 CB" checked>
     550 Cortex Baker Upgrade
 </label>
 <br>
@@ -39,23 +167,23 @@
 <br>
 <br>
 <label>
-    <input type="checkbox" id="fhrb">
+    <input type="checkbox" id="fhrb" checked>
     Use FH+RB while buying buildings?
 </label>
 <br>
 <label>
-    <input type="checkbox" id="emg">
+    <input type="checkbox" id="emg" checked>
     Use EMG while buying buildings?
 </label>
 <br>
 <label>
-    <input type="checkbox" id="esrb">
+    <input type="checkbox" id="esrb" checked>
     Sell buildings before ascending (with ES+RB)?
 </label>
 <br>
 <br>
 <input type="number" id="buyYous" value = 1000>
-<label for="buyYous"> Number of times you buy up to your max you count this ascension (on noskip this number would be lower, since you scum away failed attempts). </label>
+<label for="buyYous"> Number of times you buy up to your max you count this ascension (on noskip this number would be lower, since you scum away failed attempts) </label>
 <br>
 <input type="number" id="ascensionGoal" value = 1000>
 <label for="ascensionGoal">Ascension Goal (in terms of NoD, after chocolate egg is bought)</label>
@@ -68,8 +196,9 @@
 <br>
 <br>
 <button id="calculate">Calculate Building Counts</button>
-
 <p id="output"></p>
-
+<p id="cps"></p>
+<p id="costs"></p>
 <script src="main.js"></script>
+</body>
 </html>
