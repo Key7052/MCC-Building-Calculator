@@ -1,47 +1,4 @@
-function calculateBuildingCounts(){
-// inputs
-const buildingUpgrades = [document.getElementById("600 JSC").checked, document.getElementById("550 CB").checked, document.getElementById("600 IV").checked, document.getElementById("550 You").checked, document.getElementById("600 CB").checked, document.getElementById("600 You").checked]
-const cookieUpgrades = [true, true, true, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false]
-const buildingBiscuits = [true, true, false, false]
-const buyYous = parseInt(document.getElementById("buyYous").value)
-const days = 26
-const pl = 144.012846338119000
-const fhrb = document.getElementById("fhrb").checked ? 0.978 : 1
-const emg = document.getElementById("emg").checked ? 0.95 : 1
-const esrb = document.getElementById("esrb").checked ? 0.6025425 : 0
-const ascensionGoal = parseInt(document.getElementById("ascensionGoal").value) * 10**60
-
-let costs = [15, 100, 1_100, 12_000, 130_000, 1_400_000, 20_000_000, 330_000_000, 5_100_000_000, 75_000_000_000, 
-    1_000_000_000_000, 14_000_000_000_000, 170_000_000_000_000, 2_100_000_000_000_000, 26_000_000_000_000_000, 
-    310_000_000_000_000_000, 36_000_000_000_000_000_000, 4_100_000_000_000_000_000_000, 
-    470_000_000_000_000_000_000_000, 106_000_000_000_000_000_000_000_000]
-let buildingCounts = [10, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-
-let youUpgrades = 13
-let cbUpgrades = 13
-let ivUpgrades = 14
-let jscUpgrades = 14
-
-if (buildingUpgrades[0]) {
-    jscUpgrades++
-}
-if (buildingUpgrades[1]) {
-    cbUpgrades++
-}
-if (buildingUpgrades[2]) {
-    ivUpgrades++
-}
-if (buildingUpgrades[3]) {
-    youUpgrades++
-}
-if (buildingUpgrades[4]) {
-    cbUpgrades++
-}
-if (buildingUpgrades[5]) {
-    youUpgrades++
-}
-console.log(jscUpgrades, cbUpgrades, ivUpgrades, youUpgrades)
-function getCPS(buildingCounts) {
+function getCPS(buildingCounts, jscUpgrades, cbUpgrades, ivUpgrades, youUpgrades) {
     let nonCursors = 0
     for (let j=1; j < buildingCounts.length; j++) {
         nonCursors += buildingCounts[j]
@@ -70,61 +27,164 @@ function getCPS(buildingCounts) {
     cps += buildingCounts[19]*510*1000**4*2.1**youUpgrades*1.07*(1+buildingCounts[1]/1800)*(1+buildingCounts[11]/1000)*(1+buildingCounts[16]/1000) // you
     return cps
 }
+function calculateBuildingCounts(jscUpgrades, cbUpgrades, ivUpgrades, youUpgrades){
+// inputs
+const cookieUpgrades = [true, true, true, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false]
+const buildingBiscuits = [true, true, false, false]
+const buyYous = Number(document.getElementById("buyYous").value)
+const days = 26
+const pl = 144.012846338119000
+const fhrb = document.getElementById("fhrb").checked ? 0.978 : 1
+const emg = document.getElementById("emg").checked ? 0.95 : 1
+const esrb = document.getElementById("esrb").checked ? 0.6025425 : 0
+const ascensionGoal = Number(document.getElementById("ascensionGoal").value) * 10**60
+
+let costs = [15, 100, 1_100, 12_000, 130_000, 1_400_000, 20_000_000, 330_000_000, 5_100_000_000, 75_000_000_000, 
+    1_000_000_000_000, 14_000_000_000_000, 170_000_000_000_000, 2_100_000_000_000_000, 26_000_000_000_000_000, 
+    310_000_000_000_000_000, 36_000_000_000_000_000_000, 4_100_000_000_000_000_000_000, 
+    470_000_000_000_000_000_000_000, 106_000_000_000_000_000_000_000_000]
+let buildingCounts = [10, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 let buildingCostTotal = 0
 let youCostTotal = 0
 for (let i=0; true; i++){
 let youSellsCost = costs[19]*0.7125*buyYous+costs[19]*0.884420746407
 
-    let cps = getCPS(buildingCounts)
+    let cps = getCPS(buildingCounts, jscUpgrades, cbUpgrades, ivUpgrades, youUpgrades)
     let nextBuildings = []
     for (let j=0; j < buildingCounts.length; j++) {
         let buyBuilding = [...buildingCounts]
-        let thing = [...buildingCounts]
         buyBuilding[j]++
-        thing[j]++
         if (j !== 19) {
-        nextBuildings.push((getCPS(buyBuilding)-cps)/(costs[j]/10**44))
-        thing.push(getCPS(buyBuilding)-cps, costs[j]/10**44) 
+        nextBuildings.push((getCPS(buyBuilding, jscUpgrades, cbUpgrades, ivUpgrades, youUpgrades)-cps)/(costs[j]/10**44)) 
         } else {
-        nextBuildings.push((getCPS(buyBuilding)-cps)/(youSellsCost/10**44))
-        thing.push((getCPS(buyBuilding)-cps), (youSellsCost/10**44))
+        nextBuildings.push((getCPS(buyBuilding, jscUpgrades, cbUpgrades, ivUpgrades, youUpgrades)-cps)/(youSellsCost/10**44))
         }
     }
     let increaseBuilding = nextBuildings.indexOf(Math.max(...nextBuildings))
     if (increaseBuilding !== 19) {
     buildingCostTotal +=  costs[increaseBuilding]*0.884420746407*emg*fhrb-costs[increaseBuilding]*0.884420746407*esrb
     } else {
+    buildingCostTotal +=  costs[increaseBuilding]*0.884420746407*emg*fhrb-costs[increaseBuilding]*0.884420746407*esrb
     youCostTotal += costs[increaseBuilding]*0.884420746407*0.7125*buyYous
     }
     costs[increaseBuilding] *= 1.15 
     if ((buildingCostTotal+youCostTotal)*(100/12.65) > ascensionGoal) {
         let buyBuilding = [...buildingCounts]
         buyBuilding[5]++
-        console.log(getCPS(buyBuilding)-cps)
+        console.log(getCPS(buyBuilding, jscUpgrades, cbUpgrades, ivUpgrades, youUpgrades)-cps)
             buildingCounts[increaseBuilding]++
         break
     }
     buildingCounts[increaseBuilding]++
 }
-return buildingCounts;
+return [buildingCounts, buildingCostTotal, buildingCostTotal+youCostTotal,buildingCostTotal/(emg*fhrb - esrb), (buildingCostTotal/(emg*fhrb - esrb))+youCostTotal, youCostTotal];
 }
 
 const button = document.getElementById("calculate");
 const output = document.getElementById("output");
 button.addEventListener("click", function() {
-    let buildings
-if (document.getElementById("bd").checked) {
-    buildings = ["Rolling Pins", "Ovens", "Kitchens", "Secret Recipes", "Factories", "Investors", "Likes", "Memes", "Supermarkets", "Stock Shares", "TV Shows", "Theme Parks", "Cookiecoins", "Corporate Countries", "Privitized Planets", "Senate Seats", "Doctrines", "Lateral Expansions", "Think Tanks", "You"];
-} else {
-    buildings = ["Cursor", "Grandma", "Farm", "Mine", "Factory", "Bank", "Temple", "Wizard Tower", "Shipment", "Alchemy Lab", "Portal", "Time Machine", "Antimatter Condenser", "Prism", "Chancemaker", "Fractal Engine", "Javascript Console", "Idleverse", "Cortex Baker", "You"];
+const buildingUpgrades = [
+    document.getElementById("600 JSC").checked, 
+    document.getElementById("550 CB").checked, 
+    document.getElementById("600 IV").checked, 
+    document.getElementById("550 You").checked, 
+    document.getElementById("600 CB").checked, 
+    document.getElementById("600 You").checked
+]
+let youUpgrades = 13
+let cbUpgrades = 13
+let ivUpgrades = 14
+let jscUpgrades = 14
+if (buildingUpgrades[0]) {
+    jscUpgrades++
 }
-const results = calculateBuildingCounts();
+if (buildingUpgrades[1]) {
+    cbUpgrades++
+}
+if (buildingUpgrades[2]) {
+    ivUpgrades++
+}
+if (buildingUpgrades[3]) {
+    youUpgrades++
+}
+if (buildingUpgrades[4]) {
+    cbUpgrades++
+}
+if (buildingUpgrades[5]) {
+    youUpgrades++
+}
+let buildings
+if (document.getElementById("bd").checked) {
+    buildings = ["Rolling Pins", "Ovens", "Kitchens", "Secret Recipes", "Factories", "Investors", "Likes", "Memes", "Supermarkets", "Stock Shares", "TV Shows", "Theme Parks", "Cookiecoins", "Corporate Countries", "Privitized Planets", "Senate Seats", "Doctrines", "Lateral Expansions", "Think Tanks", "Yous"];
+} else {
+    buildings = ["Cursors", "Grandmas", "Farms", "Mines", "Factories", "Banks", "Temples", "Wizard Towers", "Shipments", "Alchemy Labs", "Portals", "Time Machines", "Antimatter Condensers", "Prisms", "Chancemakers", "Fractal Engines", "Javascript Consoles", "Idleverses", "Cortex Bakers", "Yous"];
+}
+let results = calculateBuildingCounts(jscUpgrades, cbUpgrades, ivUpgrades, youUpgrades);
 
 let outputText = "";
 
-    for (let i = 0; i < results.length; i++) {
-        outputText += `${buildings[i]}: ${results[i]}<br>`;
+    for (let i = 0; i < results[0].length; i++) {
+        outputText += `${buildings[i]}: ${results[0][i]}<br>`;
     }
 
     output.innerHTML = outputText;
+
+const days = Number(document.getElementById("days").value)
+const ambergris = document.getElementById("ambergris").checked ? 1.06 : 1
+const pl = Number(document.getElementById("pl").value * 10 ** 13) // in terms of quadrillions, divided by 100 to get the actual multiplier
+const cookieUpgrades = [
+    document.getElementById("cookie1").checked, document.getElementById("cookie2").checked, document.getElementById("cookie3").checked, 
+    document.getElementById("cookie4").checked, document.getElementById("cookie5").checked, document.getElementById("cookie6").checked, 
+    document.getElementById("cookie7").checked, document.getElementById("cookie8").checked, document.getElementById("cookie9").checked, 
+    document.getElementById("cookie10").checked, document.getElementById("cookie11").checked, document.getElementById("cookie12").checked, 
+    document.getElementById("cookie13").checked, document.getElementById("cookie14").checked, document.getElementById("cookie15").checked,
+    document.getElementById("cookie16").checked, document.getElementById("cookie17").checked,document.getElementById("cookie18").checked].filter(value => value === true).length
+const buildingBiscuits = [
+    document.getElementById("550 Biscuit").checked, document.getElementById("600 Biscuit").checked,
+    document.getElementById("650 Biscuit").checked, document.getElementById("700 Biscuit").checked].filter(value => value === true).length
+const milkMults = [0.11025, 0.1378125, 0.165375, 0.1929375, 0.2205, 0.2205, 0.2205, 0.2205, 0.2205, 0.1929375, 0.165375, 0.1378125, 0.1267875, 0.121275, 0.1157625, 0.055125, 0.11025];
+let milkMult = 1;
+let milkPercent = document.getElementById("achievements").value/25
+for (i=0; i < milkMults.length; i++) {
+    milkMult *= 1+(milkPercent*milkMults[i])
+}
+let trueCps =
+    (getCPS(results[0], jscUpgrades, cbUpgrades, ivUpgrades, youUpgrades) + 9)
+    * 1.05 ** cookieUpgrades
+    * 1.1 ** buildingBiscuits
+    * pl
+    * ambergris
+    * (1 + (1 - (1 - Math.min(days / 100, 1)) ** 3) / 10)
+    * 25716.13
+    * milkMult;
+let numberNames = ["", "K", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No", "Dc", "UnD", "DoD", "TrD", "QaD", "QiD", "SxD", "SpD", "OcD", "NoD", "V", "UnV"]
+let cpsIndex = Math.max(0, Math.floor(Math.log10(trueCps) / 3));
+trueCps /= 10 ** (cpsIndex * 3);
+document.getElementById("cps").innerHTML = `CPS (BoM+RA, GS on): ${trueCps.toFixed(3)} ${numberNames[cpsIndex]}`;
+
+let costText = ""
+
+costText += `Note: Undiscounted refers to the cost if you didn't use any of the optional discounts listed above (emg, fh+rb, es+rb), and does not refer to any upgrades that reduce building costs. <br>`
+
+let costIndex1 = Math.max(0, Math.floor(Math.log10(results[1]) / 3));
+results[1] /= 10 ** (costIndex1 * 3);
+costText += `Building Costs: ${results[1].toFixed(3)} ${numberNames[costIndex1]} <br>`
+
+let costIndex2 = Math.max(0, Math.floor(Math.log10(results[2]) / 3));
+results[2] /= 10 ** (costIndex2 * 3);
+costText += `Building Cost (with you sells): ${results[2].toFixed(3)} ${numberNames[costIndex2]} <br>`
+
+let costIndex3 = Math.max(0, Math.floor(Math.log10(results[3]) / 3));
+results[3] /= 10 ** (costIndex3 * 3);
+costText += `Undiscounted Building Cost: ${results[3].toFixed(3)} ${numberNames[costIndex3]} <br>`
+
+let costIndex4 = Math.max(0, Math.floor(Math.log10(results[4]) / 3));
+results[4] /= 10 ** (costIndex4 * 3);
+costText += `Undiscounted Building Cost (with you sells): ${results[4].toFixed(3)} ${numberNames[costIndex4]} <br>`
+
+let costIndex5 = Math.max(0, Math.floor(Math.log10(results[5]) / 3));
+results[5] /= 10 ** (costIndex5 * 3);
+costText += `Cost of You sells: ${results[5].toFixed(3)} ${numberNames[costIndex5]} <br>`
+
+document.getElementById("costs").innerHTML = costText;
 });
