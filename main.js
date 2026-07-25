@@ -77,7 +77,7 @@ let youSellsCost = costs[19]*0.7125*buyYous+costs[19]*0.884420746407
     }
     buildingCounts[increaseBuilding]++
 }
-return [buildingCounts, buildingCostTotal, buildingCostTotal+youCostTotal,buildingCostTotal/(emg*fhrb - esrb), (buildingCostTotal/(emg*fhrb - esrb))+youCostTotal, youCostTotal];
+return [buildingCounts, buildingCostTotal * (1-esrb/(emg*fhrb)), buildingCostTotal, buildingCostTotal+youCostTotal,buildingCostTotal/(emg*fhrb - esrb), (buildingCostTotal/(emg*fhrb - esrb))+youCostTotal, youCostTotal];
 }
 
 const button = document.getElementById("calculate");
@@ -164,27 +164,32 @@ document.getElementById("cps").innerHTML = `CPS (BoM+RA, GS on): ${trueCps.toFix
 
 let costText = ""
 
-costText += `Note: Undiscounted refers to the cost if you didn't use any of the optional discounts listed above (emg, fh+rb, es+rb), and does not refer to any upgrades that reduce building costs. <br>`
+costText += `Note: Undiscounted refers to the cost if you didn't use any of the optional discounts listed above (emg, fh+rb, es+rb), and does not refer to any upgrades that reduce building costs. <br>
+            Initial cost refers to the cost with fh+rb and emg if you had selected it, but does not consider es+rb because that doesn't decrease the initial price you pay for the buildings. <br> <br>`
 
 let costIndex1 = Math.max(0, Math.floor(Math.log10(results[1]) / 3));
 results[1] /= 10 ** (costIndex1 * 3);
-costText += `Building Costs: ${results[1].toFixed(3)} ${numberNames[costIndex1]} <br>`
+costText += `Initial Building Costs: ${results[1].toFixed(3)} ${numberNames[costIndex1]} <br>`
 
 let costIndex2 = Math.max(0, Math.floor(Math.log10(results[2]) / 3));
 results[2] /= 10 ** (costIndex2 * 3);
-costText += `Building Cost (with you sells): ${results[2].toFixed(3)} ${numberNames[costIndex2]} <br>`
+costText += `Building Costs: ${results[2].toFixed(3)} ${numberNames[costIndex2]} <br>`
 
 let costIndex3 = Math.max(0, Math.floor(Math.log10(results[3]) / 3));
 results[3] /= 10 ** (costIndex3 * 3);
-costText += `Undiscounted Building Cost: ${results[3].toFixed(3)} ${numberNames[costIndex3]} <br>`
+costText += `Building Cost (with you sells): ${results[3].toFixed(3)} ${numberNames[costIndex3]} <br>`
 
 let costIndex4 = Math.max(0, Math.floor(Math.log10(results[4]) / 3));
 results[4] /= 10 ** (costIndex4 * 3);
-costText += `Undiscounted Building Cost (with you sells): ${results[4].toFixed(3)} ${numberNames[costIndex4]} <br>`
+costText += `Undiscounted Building Cost: ${results[4].toFixed(3)} ${numberNames[costIndex4]} <br>`
 
 let costIndex5 = Math.max(0, Math.floor(Math.log10(results[5]) / 3));
 results[5] /= 10 ** (costIndex5 * 3);
-costText += `Cost of You sells: ${results[5].toFixed(3)} ${numberNames[costIndex5]} <br>`
+costText += `Undiscounted Building Cost (with you sells): ${results[5].toFixed(3)} ${numberNames[costIndex5]} <br>`
+
+let costIndex6 = Math.max(0, Math.floor(Math.log10(results[6]) / 3));
+results[6] /= 10 ** (costIndex6 * 3);
+costText += `Cost of You sells: ${results[6].toFixed(3)} ${numberNames[costIndex6]} <br>`
 
 document.getElementById("costs").innerHTML = costText;
 });
