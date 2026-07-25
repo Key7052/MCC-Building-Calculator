@@ -77,7 +77,7 @@ let youSellsCost = costs[19]*0.7125*buyYous+costs[19]*0.884420746407
     }
     buildingCounts[increaseBuilding]++
 }
-return [buildingCounts, buildingCostTotal * (1-esrb/(emg*fhrb)), buildingCostTotal, buildingCostTotal+youCostTotal,buildingCostTotal/(emg*fhrb - esrb), (buildingCostTotal/(emg*fhrb - esrb))+youCostTotal, youCostTotal];
+return [buildingCounts, buildingCostTotal / (1-esrb/(emg*fhrb)), buildingCostTotal, buildingCostTotal+youCostTotal,buildingCostTotal/(emg*fhrb - esrb), (buildingCostTotal/(emg*fhrb - esrb))+youCostTotal, youCostTotal];
 }
 
 const button = document.getElementById("calculate");
