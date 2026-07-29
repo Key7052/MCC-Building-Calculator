@@ -36,7 +36,7 @@ const days = 26
 const pl = 144.012846338119000
 const fhrb = document.getElementById("fhrb").checked ? 0.978 : 1
 const emg = document.getElementById("emg").checked ? 0.95 : 1
-const esrb = document.getElementById("esrb").checked ? 0.6025425 : 0
+const esrb = document.getElementById("esrb").checked ? 0.6025425 : 0.2875
 const ascensionGoal = Number(document.getElementById("ascensionGoal").value) * 10**60
 
 let costs = [15, 100, 1_100, 12_000, 130_000, 1_400_000, 20_000_000, 330_000_000, 5_100_000_000, 75_000_000_000, 
