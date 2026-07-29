@@ -68,7 +68,7 @@ let youSellsCost = costs[19]*0.7125*buyYous+costs[19]*0.884420746407
     youCostTotal += costs[increaseBuilding]*0.884420746407*0.7125*buyYous
     }
     costs[increaseBuilding] *= 1.15 
-    if ((buildingCostTotal+youCostTotal)*(100/12.65) > ascensionGoal) {
+    if ((buildingCostTotal+youCostTotal)*(100/5.03) > ascensionGoal) {
         let buyBuilding = [...buildingCounts]
         buyBuilding[5]++
         console.log(getCPS(buyBuilding, jscUpgrades, cbUpgrades, ivUpgrades, youUpgrades)-cps)
