@@ -61,18 +61,24 @@ let youSellsCost = costs[19]*0.7125*buyYous+costs[19]*0.884420746407
         }
     }
     let increaseBuilding = nextBuildings.indexOf(Math.max(...nextBuildings))
-    if (increaseBuilding !== 19) {
+    let costBeforeBuy = buildingCostTotal*(1-esrb/(emg*fhrb))+youCostTotal
     buildingCostTotal +=  costs[increaseBuilding]*0.884420746407*emg*fhrb-costs[increaseBuilding]*0.884420746407*esrb
-    } else {
+    if (increaseBuilding == 19) {
     buildingCostTotal +=  costs[increaseBuilding]*0.884420746407*emg*fhrb-costs[increaseBuilding]*0.884420746407*esrb
     youCostTotal += costs[increaseBuilding]*0.884420746407*0.7125*buyYous
     }
-    costs[increaseBuilding] *= 1.15 
-    if ((buildingCostTotal+youCostTotal)*(100/5.03) > ascensionGoal) {
-        let buyBuilding = [...buildingCounts]
-        buyBuilding[5]++
-        console.log(getCPS(buyBuilding, jscUpgrades, cbUpgrades, ivUpgrades, youUpgrades)-cps)
+    costs[increaseBuilding] *= 1.15
+    let idealBuildingCost = ascensionGoal*0.1265
+    let buildingCostsTotalNoEsrb = buildingCostTotal/(1-esrb/(emg*fhrb))
+    if ((buildingCostTotal / (1-esrb/(emg*fhrb))+youCostTotal) > idealBuildingCost){
+        console.log(idealBuildingCost-(idealBuildingCost-(buildingCostsTotalNoEsrb+youCostTotal)), idealBuildingCost-(costBeforeBuy), idealBuildingCost)
+        if (idealBuildingCost-(idealBuildingCost-(buildingCostsTotalNoEsrb+youCostTotal)) < idealBuildingCost-(costBeforeBuy)) {
             buildingCounts[increaseBuilding]++
+        } else {
+        buildingCostTotal = costBeforeBuy - youCostTotal // cost with esrb discount
+        youCostTotal = costBeforeBuy - buildingCostTotal
+        buildingCostTotal /= 1-esrb/(emg*fhrb) // cost without esrb discount
+        }
         break
     }
     buildingCounts[increaseBuilding]++
