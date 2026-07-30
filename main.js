@@ -68,9 +68,40 @@ let youSellsCost = costs[19]*0.7125*buyYous+costs[19]*0.884420746407
     youCostTotal += costs[increaseBuilding]*0.884420746407*0.7125*buyYous
     }
     costs[increaseBuilding] *= 1.15
-    let idealBuildingCost = ascensionGoal*0.1265
     let buildingCostsTotalNoEsrb = buildingCostTotal/(1-esrb/(emg*fhrb))
-    if ((buildingCostTotal / (1-esrb/(emg*fhrb))+youCostTotal) > idealBuildingCost){
+    //let effectiveEsrbMult = esrb == 0.6025425 ? 1/(1-0.6025425) : (1/(1-0.6025425))/(1/(1-0.2875)) 
+    // let idealBuildingCost = ascensionGoal * 0.1265 * (1/emg * buildingCostTotal/(buildingCostTotal+youCostTotal)) * (1/fhrb * buildingCostTotal/(buildingCostTotal+youCostTotal)) * (buildingCostsTotalNoEsrb/effectiveEsrbMult+youCostTotal)/(buildingCostTotal+youCostTotal)
+    let idealBuildingCost
+    if (fhrb == 1) {
+        if (emg == 1) {
+            if (esrb == 0.2875){
+                idealBuildingCost = ascensionGoal*0.06691168169902452
+            } else {
+                idealBuildingCost = ascensionGoal*0.1136213922568368
+            }
+        } else {
+            if (esrb == 0.2875) {
+                idealBuildingCost = ascensionGoal*0.06825948077069768
+            } else {
+                idealBuildingCost = ascensionGoal*0.1222090247012816
+            }
+        }
+    } else {
+        if (emg == 1) {
+            if (esrb == 0.2875){
+                idealBuildingCost = ascensionGoal*0.06748116655708162
+            } else {
+                idealBuildingCost = ascensionGoal*0.117139515259374
+            }
+        } else {
+            if (esrb == 0.2875) {
+                idealBuildingCost = ascensionGoal*0.6888372371974738
+            } else {
+                idealBuildingCost = ascensionGoal*0.1265108722266798
+            }
+        }
+    }
+    if ((buildingCostsTotalNoEsrb+youCostTotal) > idealBuildingCost){
         console.log(idealBuildingCost-(idealBuildingCost-(buildingCostsTotalNoEsrb+youCostTotal)), idealBuildingCost-(costBeforeBuy), idealBuildingCost)
         if (idealBuildingCost-(idealBuildingCost-(buildingCostsTotalNoEsrb+youCostTotal)) < idealBuildingCost-(costBeforeBuy)) {
             buildingCounts[increaseBuilding]++
@@ -83,7 +114,7 @@ let youSellsCost = costs[19]*0.7125*buyYous+costs[19]*0.884420746407
     }
     buildingCounts[increaseBuilding]++
 }
-return [buildingCounts, buildingCostTotal / (1-esrb/(emg*fhrb)), buildingCostTotal, buildingCostTotal+youCostTotal,buildingCostTotal/(emg*fhrb - esrb), (buildingCostTotal/(emg*fhrb - esrb))+youCostTotal, youCostTotal];
+return [buildingCounts, buildingCostTotal / (1-esrb/(emg*fhrb)), buildingCostTotal, buildingCostTotal+youCostTotal, buildingCostTotal/(emg*fhrb - esrb), (buildingCostTotal/(emg*fhrb - esrb))+youCostTotal, youCostTotal];
 }
 
 const button = document.getElementById("calculate");
