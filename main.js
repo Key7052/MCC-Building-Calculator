@@ -3,29 +3,37 @@ function getCPS(buildingCounts, jscUpgrades, cbUpgrades, ivUpgrades, youUpgrades
     for (let j=1; j < buildingCounts.length; j++) {
         nonCursors += buildingCounts[j]
     }
-    
+    let missingTiers = [document.getElementById("iridium").checked, document.getElementById("glucosmium").checked, document.getElementById("glimmeringue").checked].filter(value => value === false).length
+    let antimUpgradeMult = document.getElementById("antimatterCondensers").checked ? 2.8 : 2
+    let prismUpgradeMult = document.getElementById("prisms").checked ? 2.7 : 2
+    let chancemakerUpgradeMult = document.getElementById("chancemakers").checked ? 2.6 : 2
+    let feUpgradeMult = document.getElementById("fractalEngines").checked ? 2.5 : 2
+    let jscUpgradeMult = document.getElementById("javascriptConsoles").checked ? 2.4 : 2
+    let ivUpgradeMult = document.getElementById("idleverses").checked ? 2.2 : 2
+    let cbUpgradeMult = document.getElementById("cortexBakers").checked ? 2.3 : 2
+    let youUpgradeMult = document.getElementById("yous").checked ? 2.1 : 2
     let cps = 0
-    cps += buildingCounts[0]*(0.1+64*1000**4)*nonCursors*1.07*(1+0.05*buildingCounts[15])*2**3 // cursor
-    cps += buildingCounts[1]*2**22*2.5**15*(1+0.05*buildingCounts[16])*1.07*(1+0.04*buildingCounts[1]+0.05*buildingCounts[10]) // grandma
-    cps += buildingCounts[2]*8*3.8**15*(1+0.01*buildingCounts[1])*(1+0.05*buildingCounts[6])*(1+0.05*buildingCounts[7])*(1+0.05*buildingCounts[10])*(1+0.05*buildingCounts[11])*(1+0.05*buildingCounts[18])*1.07 // farm
-    cps += buildingCounts[3]*47*3.7**15*(1+buildingCounts[1]/200)*1.07*(1+0.05*buildingCounts[7])*(1+0.05*buildingCounts[8])**2*(1+0.05*buildingCounts[9])*(1+0.05*buildingCounts[14]) // mine
-    cps += buildingCounts[4]*260*3.6**15*1.07*(1+buildingCounts[1]/300)*(1+0.05*buildingCounts[5])*(1+0.05*buildingCounts[8])*(1+0.05*buildingCounts[11])*(1+0.05*buildingCounts[12]) // factory
-    cps += buildingCounts[5]*1400*3.5**15*1.07*(1+buildingCounts[1]/400)*(1+buildingCounts[4]/1000)*(1+0.05*buildingCounts[9])*(1+0.05*buildingCounts[10])*(1+0.05*buildingCounts[12]) // bank
-    cps += buildingCounts[6]*7800*3.4**15*1.07*(1+buildingCounts[1]/500)*(1+buildingCounts[2]/1000)*(1+0.05*buildingCounts[10])*(1+0.05*buildingCounts[12])*(1+0.05*buildingCounts[13])*(1+0.05*buildingCounts[18]) // temple
-    cps += buildingCounts[7]*44000*3.3**15*1.07*(1+buildingCounts[1]/600)*(1+buildingCounts[2]/1000)*(1+buildingCounts[3]/1000)*(1+0.05*buildingCounts[13])*(1+0.05*buildingCounts[9]) // wizard tower
-    cps += buildingCounts[8]*260000*3.2**15*1.07*(1+buildingCounts[1]/700)*(1+buildingCounts[3]/1000)**2*(1+buildingCounts[4]/1000)*(1+buildingCounts[11]*0.05) // shipment
-    cps += buildingCounts[9]*1.6*1000**2*3.1**15*1.07*(1+buildingCounts[1]/800)*(1+0.05*buildingCounts[12])*(1+buildingCounts[3]/1000)*(1+buildingCounts[5]/1000)*(1+buildingCounts[7]/1000) // alchemy lab
-    cps += buildingCounts[10]*10*1000**2*3**15*1.07*(1+buildingCounts[1]/900)*(1+0.05*buildingCounts[13])*(1+0.05*buildingCounts[17])*(1+buildingCounts[2]/1000)*(1+buildingCounts[6]/1000)*(1+buildingCounts[5]/1000) // portal
-    cps += buildingCounts[11]*65*1000**2*2.9**15*1.07*(1+0.05*buildingCounts[13])*(1+0.05*buildingCounts[19])*(1+buildingCounts[8]/1000)*(1+buildingCounts[4]/1000)*(1+buildingCounts[2]/1000)*(1+buildingCounts[1]/1000) // time machine
-    cps += buildingCounts[12]*430*1000**2*2.8**15*1.07*(1+buildingCounts[1]/1100)*(1+0.05*buildingCounts[14])*(1+buildingCounts[5]/1000)*(1+buildingCounts[6]/1000)*(1+buildingCounts[4]/1000)*(1+buildingCounts[9]/1000) // antimatter condenser
-    cps += buildingCounts[13]*2.9*1000**3*2.7**15*1.07*(1+buildingCounts[1]/1200)*(1+0.05*buildingCounts[15])*(1+buildingCounts[6]/1000)*(1+buildingCounts[7]/1000)*(1+buildingCounts[11]/1000)*(1+buildingCounts[10]/1000) // prism
-    cps += buildingCounts[14]*21*1000**3*2.6**15*1.07*(1+buildingCounts[1]/1300)*(1+0.05*buildingCounts[16])*(1+buildingCounts[3]/1000)*(1+buildingCounts[12]/1000) // chancemaker
-    cps += buildingCounts[15]*150*1000**3*2.5**15*1.07*(1+buildingCounts[1]/1400)*(1+0.05*buildingCounts[17])*(1+buildingCounts[0]/1000)*(1+buildingCounts[13]/1000) // fractal engine
-    cps += buildingCounts[16]*1.1*1000**4*2.4**jscUpgrades*1.07*(1+buildingCounts[1]/1500)*(1+0.05*buildingCounts[19])*(1+buildingCounts[1]/1000)*(1+buildingCounts[14]/1000) // javascript console
-    cps += buildingCounts[17]*8.3*1000**4*2.3**ivUpgrades*1.07*(1+buildingCounts[1]/1600)*(1+buildingCounts[10]/1000)*(1+buildingCounts[15]/1000) // idleverse
-    cps += buildingCounts[18]*64*1000**4*2.2**cbUpgrades*1.07*(1+buildingCounts[1]/1700)*(1+buildingCounts[6]/1000)*(1+buildingCounts[2]/1000) // cortex baker
-    cps += buildingCounts[19]*510*1000**4*2.1**youUpgrades*1.07*(1+buildingCounts[1]/1800)*(1+buildingCounts[11]/1000)*(1+buildingCounts[16]/1000) // you
-    return cps
+    cps += buildingCounts[0]*(0.1+64*1000**4)*nonCursors*(1+0.05*buildingCounts[15])*2**3 // cursor
+    cps += buildingCounts[1]*2**22*2.5**(15-missingTiers)*2**missingTiers*(1+0.05*buildingCounts[16])*(1+0.04*buildingCounts[1]+0.05*buildingCounts[10]) // grandma
+    cps += buildingCounts[2]*8*3.8**(15-missingTiers)*2**missingTiers*(1+0.01*buildingCounts[1])*(1+0.05*buildingCounts[6])*(1+0.05*buildingCounts[7])*(1+0.05*buildingCounts[10])*(1+0.05*buildingCounts[11])*(1+0.05*buildingCounts[18]) // farm
+    cps += buildingCounts[3]*47*3.7**(15-missingTiers)*2**missingTiers*(1+buildingCounts[1]/200)*(1+0.05*buildingCounts[7])*(1+0.05*buildingCounts[8])**2*(1+0.05*buildingCounts[9])*(1+0.05*buildingCounts[14]) // mine
+    cps += buildingCounts[4]*260*3.6**(15-missingTiers)*2**missingTiers*(1+buildingCounts[1]/300)*(1+0.05*buildingCounts[5])*(1+0.05*buildingCounts[8])*(1+0.05*buildingCounts[11])*(1+0.05*buildingCounts[12]) // factory
+    cps += buildingCounts[5]*1400*3.5**(15-missingTiers)*2**missingTiers*(1+buildingCounts[1]/400)*(1+buildingCounts[4]/1000)*(1+0.05*buildingCounts[9])*(1+0.05*buildingCounts[10])*(1+0.05*buildingCounts[12]) // bank
+    cps += buildingCounts[6]*7800*3.4**(15-missingTiers)*2**missingTiers*(1+buildingCounts[1]/500)*(1+buildingCounts[2]/1000)*(1+0.05*buildingCounts[10])*(1+0.05*buildingCounts[12])*(1+0.05*buildingCounts[13])*(1+0.05*buildingCounts[18]) // temple
+    cps += buildingCounts[7]*44000*3.3**(15-missingTiers)*2**missingTiers*(1+buildingCounts[1]/600)*(1+buildingCounts[2]/1000)*(1+buildingCounts[3]/1000)*(1+0.05*buildingCounts[13])*(1+0.05*buildingCounts[9]) // wizard tower
+    cps += buildingCounts[8]*260000*3.2**(15-missingTiers)*2**missingTiers*(1+buildingCounts[1]/700)*(1+buildingCounts[3]/1000)**2*(1+buildingCounts[4]/1000)*(1+buildingCounts[11]*0.05) // shipment
+    cps += buildingCounts[9]*1.6*1000**2*3.1**(15-missingTiers)*2**missingTiers*(1+buildingCounts[1]/800)*(1+0.05*buildingCounts[12])*(1+buildingCounts[3]/1000)*(1+buildingCounts[5]/1000)*(1+buildingCounts[7]/1000) // alchemy lab
+    cps += buildingCounts[10]*10*1000**2*3**(15-missingTiers)*2**missingTiers*(1+buildingCounts[1]/900)*(1+0.05*buildingCounts[13])*(1+0.05*buildingCounts[17])*(1+buildingCounts[2]/1000)*(1+buildingCounts[6]/1000)*(1+buildingCounts[5]/1000) // portal
+    cps += buildingCounts[11]*65*1000**2*2.9**(15-missingTiers)*2**missingTiers*(1+0.05*buildingCounts[13])*(1+0.05*buildingCounts[19])*(1+buildingCounts[8]/1000)*(1+buildingCounts[4]/1000)*(1+buildingCounts[2]/1000)*(1+buildingCounts[1]/1000) // time machine
+    cps += buildingCounts[12]*430*1000**2*antimUpgradeMult**(15-missingTiers)*2**missingTiers*(1+buildingCounts[1]/1100)*(1+0.05*buildingCounts[14])*(1+buildingCounts[5]/1000)*(1+buildingCounts[6]/1000)*(1+buildingCounts[4]/1000)*(1+buildingCounts[9]/1000) // antimatter condenser
+    cps += buildingCounts[13]*2.9*1000**3*prismUpgradeMult**(15-missingTiers)*2**missingTiers*(1+buildingCounts[1]/1200)*(1+0.05*buildingCounts[15])*(1+buildingCounts[6]/1000)*(1+buildingCounts[7]/1000)*(1+buildingCounts[11]/1000)*(1+buildingCounts[10]/1000) // prism
+    cps += buildingCounts[14]*21*1000**3*chancemakerUpgradeMult**(15-missingTiers)*2**missingTiers*(1+buildingCounts[1]/1300)*(1+0.05*buildingCounts[16])*(1+buildingCounts[3]/1000)*(1+buildingCounts[12]/1000) // chancemaker
+    cps += buildingCounts[15]*150*1000**3*feUpgradeMult**(15-missingTiers)*2**missingTiers*(1+buildingCounts[1]/1400)*(1+0.05*buildingCounts[17])*(1+buildingCounts[0]/1000)*(1+buildingCounts[13]/1000) // fractal engine
+    cps += buildingCounts[16]*1.1*1000**4*jscUpgradeMult**(Math.min(jscUpgrades, 15-missingTiers))*2**Math.max(missingTiers-(15-jscUpgrades), 0)*(1+buildingCounts[1]/1500)*(1+0.05*buildingCounts[19])*(1+buildingCounts[1]/1000)*(1+buildingCounts[14]/1000) // javascript console
+    cps += buildingCounts[17]*8.3*1000**4*ivUpgradeMult**(Math.min(cbUpgrades, 15-missingTiers))*2**Math.max(missingTiers-(15-cbUpgrades), 0)*(1+buildingCounts[1]/1600)*(1+buildingCounts[10]/1000)*(1+buildingCounts[15]/1000) // idleverse
+    cps += buildingCounts[18]*64*1000**4*cbUpgradeMult**(Math.min(ivUpgrades, 15-missingTiers))*2**Math.max(missingTiers-(15-ivUpgrades), 0)*(1+buildingCounts[6]/1000)*(1+buildingCounts[2]/1000) // cortex baker
+    cps += buildingCounts[19]*510*1000**4*youUpgradeMult**(Math.min(youUpgrades, 15-missingTiers))*2**Math.max(missingTiers-(15-youUpgrades), 0)*(1+buildingCounts[1]/1800)*(1+buildingCounts[11]/1000)*(1+buildingCounts[16]/1000) // you
+    return cps*1.07 //1.07x is from the fortune upgrade for every individual building
 }
 function calculateBuildingCounts(jscUpgrades, cbUpgrades, ivUpgrades, youUpgrades){
 // inputs
@@ -48,33 +56,8 @@ let buildingCostTotal = 0
 let individualBuildingCosts = Array(20).fill(0);
 let individualBuildingCostsAdjusted;
 let youCostTotal = 0
-for (let i=0; true; i++){
-let youSellsCost = costs[19]*0.7125*buyYous+costs[19]*0.884420746407
-
-    let cps = getCPS(buildingCounts, jscUpgrades, cbUpgrades, ivUpgrades, youUpgrades)
-    let nextBuildings = []
-    for (let j=0; j < buildingCounts.length; j++) {
-        let buyBuilding = [...buildingCounts]
-        buyBuilding[j]++
-        if (j !== 19) {
-        nextBuildings.push((getCPS(buyBuilding, jscUpgrades, cbUpgrades, ivUpgrades, youUpgrades)-cps)/(costs[j]/10**44)) 
-        } else {
-        nextBuildings.push((getCPS(buyBuilding, jscUpgrades, cbUpgrades, ivUpgrades, youUpgrades)-cps)/(youSellsCost/10**44))
-        }
-    }
-    let increaseBuilding = nextBuildings.indexOf(Math.max(...nextBuildings))
-    let costBeforeBuy = buildingCostTotal*(1-esrb/(emg*fhrb))+youCostTotal
-    buildingCostTotal +=  costs[increaseBuilding]*0.884420746407*emg*fhrb-costs[increaseBuilding]*0.884420746407*esrb
-    if (increaseBuilding == 19) {
-    buildingCostTotal +=  costs[increaseBuilding]*0.884420746407*emg*fhrb-costs[increaseBuilding]*0.884420746407*esrb
-    youCostTotal += costs[increaseBuilding]*0.884420746407*0.7125*buyYous
-    }
-    individualBuildingCosts[increaseBuilding] += costs[increaseBuilding]*0.884420746407*emg*fhrb
-    costs[increaseBuilding] *= 1.15
-    let buildingCostsTotalNoEsrb = buildingCostTotal/(1-esrb/(emg*fhrb)) 
-    // let effectiveEsrbMult = esrb == 0.6025425 ? 1/(1-0.6025425) : (1/(1-0.6025425))/(1/(1-0.2875)) 
-    // let idealBuildingCost = ascensionGoal * 0.1265 * (1/emg * buildingCostTotal/(buildingCostTotal+youCostTotal)) * (1/fhrb * buildingCostTotal/(buildingCostTotal+youCostTotal)) * (buildingCostsTotalNoEsrb/effectiveEsrbMult+youCostTotal)/(buildingCostTotal+youCostTotal)
-    let idealBuildingCost;
+let idealBuildingCost;
+const buyHundredMult = (1.15**100-1)/0.15
     // hardcoded % of ascension goal numbers from jessie
     if (fhrb == 1) {
         if (emg == 1) {
@@ -105,7 +88,44 @@ let youSellsCost = costs[19]*0.7125*buyYous+costs[19]*0.884420746407
             }
         }
     }
-    
+for (let i=0; true; i++){
+let youSellsCost = costs[19]*0.7125*buyYous+costs[19]*0.884420746407
+
+    let cps = getCPS(buildingCounts, jscUpgrades, cbUpgrades, ivUpgrades, youUpgrades)
+    let nextBuildings = []
+    for (let j=0; j < buildingCounts.length; j++) {
+        let buyBuilding = [...buildingCounts]
+        buyBuilding[j]++
+        if (j !== 19) {
+        nextBuildings.push((getCPS(buyBuilding, jscUpgrades, cbUpgrades, ivUpgrades, youUpgrades)-cps)/(costs[j]/10**44)) 
+        } else {
+        nextBuildings.push((getCPS(buyBuilding, jscUpgrades, cbUpgrades, ivUpgrades, youUpgrades)-cps)/(youSellsCost/10**44))
+        }
+    }
+    let increaseBuilding = nextBuildings.indexOf(Math.max(...nextBuildings))
+    let costBeforeBuy = buildingCostTotal*(1-esrb/(emg*fhrb))+youCostTotal
+    if (costBeforeBuy * buyHundredMult > idealBuildingCost) {
+    buildingCostTotal +=  costs[increaseBuilding]*0.884420746407*emg*fhrb-costs[increaseBuilding]*0.884420746407*esrb
+    if (increaseBuilding == 19) {
+    youCostTotal += costs[increaseBuilding]*0.884420746407*0.7125*buyYous
+    }
+    individualBuildingCosts[increaseBuilding] += costs[increaseBuilding]*0.884420746407*emg*fhrb
+    costs[increaseBuilding] *= 1.15
+    } else {
+    // increase the things as if 100 buildings were bought, if really far from the goal
+    let costOfOne = costs[increaseBuilding]*0.884420746407*emg*fhrb-costs[increaseBuilding]*0.884420746407*esrb
+    buildingCostTotal += costOfOne * buyHundredMult
+    individualBuildingCosts[increaseBuilding] += costOfOne * buyHundredMult
+    if (increaseBuilding == 19){
+        costOfOne = costs[increaseBuilding]*0.884420746407*0.7125*buyYous
+        youCostTotal += costOfOne*buyHundredMult
+    }
+    costs[increaseBuilding] *= 1.15**100
+    buildingCounts[increaseBuilding] += 99 // plus 1 more later on
+    }
+
+    let buildingCostsTotalNoEsrb = buildingCostTotal/(1-esrb/(emg*fhrb))
+
     if ((buildingCostsTotalNoEsrb+youCostTotal) > idealBuildingCost){
         console.log(idealBuildingCost-(idealBuildingCost-(buildingCostsTotalNoEsrb+youCostTotal)), idealBuildingCost-(costBeforeBuy), idealBuildingCost)
         if (idealBuildingCost-(idealBuildingCost-(buildingCostsTotalNoEsrb+youCostTotal)) < idealBuildingCost-(costBeforeBuy)) {
@@ -158,7 +178,7 @@ if (buildingUpgrades[4]) {
 if (buildingUpgrades[5]) {
     youUpgrades++
 }
-let numberNames = ["", "K", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No", "Dc", "UnD", "DoD", "TrD", "QaD", "QiD", "SxD", "SpD", "OcD", "NoD", "V", "UnV", "DoV"]
+let numberNames = ["", "K", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No", "Dc", "UnD", "DoD", "TrD", "QaD", "QiD", "SxD", "SpD", "OcD", "NoD", "V", "UnV", "DoV", "TrV", "QaV", "QiV", "SxV"]
 
 let buildings;
 if (document.getElementById("bd").checked) {
