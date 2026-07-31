@@ -45,6 +45,8 @@ let costs = [15, 100, 1_100, 12_000, 130_000, 1_400_000, 20_000_000, 330_000_000
     470_000_000_000_000_000_000_000, 106_000_000_000_000_000_000_000_000]
 let buildingCounts = [10, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 let buildingCostTotal = 0
+let individualBuildingCosts = Array(20).fill(0);
+let individualBuildingCostsAdjusted;
 let youCostTotal = 0
 for (let i=0; true; i++){
 let youSellsCost = costs[19]*0.7125*buyYous+costs[19]*0.884420746407
@@ -67,11 +69,13 @@ let youSellsCost = costs[19]*0.7125*buyYous+costs[19]*0.884420746407
     buildingCostTotal +=  costs[increaseBuilding]*0.884420746407*emg*fhrb-costs[increaseBuilding]*0.884420746407*esrb
     youCostTotal += costs[increaseBuilding]*0.884420746407*0.7125*buyYous
     }
+    individualBuildingCosts[increaseBuilding] += costs[increaseBuilding]*0.884420746407*emg*fhrb
     costs[increaseBuilding] *= 1.15
-    let buildingCostsTotalNoEsrb = buildingCostTotal/(1-esrb/(emg*fhrb))
-    //let effectiveEsrbMult = esrb == 0.6025425 ? 1/(1-0.6025425) : (1/(1-0.6025425))/(1/(1-0.2875)) 
+    let buildingCostsTotalNoEsrb = buildingCostTotal/(1-esrb/(emg*fhrb)) 
+    // let effectiveEsrbMult = esrb == 0.6025425 ? 1/(1-0.6025425) : (1/(1-0.6025425))/(1/(1-0.2875)) 
     // let idealBuildingCost = ascensionGoal * 0.1265 * (1/emg * buildingCostTotal/(buildingCostTotal+youCostTotal)) * (1/fhrb * buildingCostTotal/(buildingCostTotal+youCostTotal)) * (buildingCostsTotalNoEsrb/effectiveEsrbMult+youCostTotal)/(buildingCostTotal+youCostTotal)
-    let idealBuildingCost
+    let idealBuildingCost;
+    // hardcoded % of ascension goal numbers from jessie
     if (fhrb == 1) {
         if (emg == 1) {
             if (esrb == 0.2875){
@@ -95,12 +99,13 @@ let youSellsCost = costs[19]*0.7125*buyYous+costs[19]*0.884420746407
             }
         } else {
             if (esrb == 0.2875) {
-                idealBuildingCost = ascensionGoal*0.6888372371974738
+                idealBuildingCost = ascensionGoal*0.06888372371974738
             } else {
                 idealBuildingCost = ascensionGoal*0.1265108722266798
             }
         }
     }
+    
     if ((buildingCostsTotalNoEsrb+youCostTotal) > idealBuildingCost){
         console.log(idealBuildingCost-(idealBuildingCost-(buildingCostsTotalNoEsrb+youCostTotal)), idealBuildingCost-(costBeforeBuy), idealBuildingCost)
         if (idealBuildingCost-(idealBuildingCost-(buildingCostsTotalNoEsrb+youCostTotal)) < idealBuildingCost-(costBeforeBuy)) {
@@ -110,11 +115,14 @@ let youSellsCost = costs[19]*0.7125*buyYous+costs[19]*0.884420746407
         youCostTotal = costBeforeBuy - buildingCostTotal
         buildingCostTotal /= 1-esrb/(emg*fhrb) // cost without esrb discount
         }
+        individualBuildingCostsAdjusted = individualBuildingCosts.map(cost => cost * emg * fhrb);
         break
     }
     buildingCounts[increaseBuilding]++
 }
-return [buildingCounts, buildingCostTotal / (1-esrb/(emg*fhrb)), buildingCostTotal, buildingCostTotal+youCostTotal, buildingCostTotal/(emg*fhrb - esrb), (buildingCostTotal/(emg*fhrb - esrb))+youCostTotal, youCostTotal];
+return [buildingCounts, buildingCostTotal/(emg*fhrb - esrb), buildingCostTotal/(emg*fhrb - esrb)+youCostTotal, 
+        buildingCostTotal / (1-esrb/(emg*fhrb)), buildingCostTotal / (1-esrb/(emg*fhrb))+youCostTotal, youCostTotal, 
+        buildingCostTotal/(emg*fhrb - esrb) * esrb, individualBuildingCosts, individualBuildingCostsAdjusted];
 }
 
 const button = document.getElementById("calculate");
@@ -150,7 +158,9 @@ if (buildingUpgrades[4]) {
 if (buildingUpgrades[5]) {
     youUpgrades++
 }
-let buildings
+let numberNames = ["", "K", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No", "Dc", "UnD", "DoD", "TrD", "QaD", "QiD", "SxD", "SpD", "OcD", "NoD", "V", "UnV", "DoV"]
+
+let buildings;
 if (document.getElementById("bd").checked) {
     buildings = ["Rolling Pins", "Ovens", "Kitchens", "Secret Recipes", "Factories", "Investors", "Likes", "Memes", "Supermarkets", "Stock Shares", "TV Shows", "Theme Parks", "Cookiecoins", "Corporate Countries", "Privitized Planets", "Senate Seats", "Doctrines", "Lateral Expansions", "Think Tanks", "Yous"];
 } else {
@@ -159,11 +169,25 @@ if (document.getElementById("bd").checked) {
 let results = calculateBuildingCounts(jscUpgrades, cbUpgrades, ivUpgrades, youUpgrades);
 
 let outputText = "";
+    if (document.getElementById("individualbuildingcosts").checked) {
+    for (let i = 0; i < results[7].length; i++){
+        let individualCostIndex = Math.max(0, Math.floor(Math.log10(results[7][i]) / 3));
+        results[7][i] /= 10 ** (individualCostIndex * 3);
+        results[7][i] = results[7][i].toFixed(3) + " " + numberNames[individualCostIndex]
 
-    for (let i = 0; i < results[0].length; i++) {
-        outputText += `${buildings[i]}: ${results[0][i]}<br>`;
+        let individualAdjustedCostIndex = Math.max(0, Math.floor(Math.log10(results[8][i]) / 3));
+        results[8][i] /= 10 ** (individualAdjustedCostIndex * 3);
+        results[8][i] = results[8][i].toFixed(3) + " " + numberNames[individualAdjustedCostIndex]
     }
-
+    results[8][19] += " (without you sells)"
+    for (let i = 0; i < results[0].length; i++) {
+        outputText += `${buildings[i]}: ${results[0][i]} <br> Base Cost: ${results[7][i]}, Adjusted Cost: ${results[8][i]} <br> <br>`;
+    }
+    } else {
+    for (let i = 0; i < results[0].length; i++) {
+        outputText += `${buildings[i]}: ${results[0][i]} <br>`;
+    }
+    }
     output.innerHTML = outputText;
 
 const days = Number(document.getElementById("days").value)
@@ -194,39 +218,37 @@ let trueCps =
     * (1 + (1 - (1 - Math.min(days / 100, 1)) ** 3) / 10)
     * 25716.13
     * milkMult;
-let numberNames = ["", "K", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No", "Dc", "UnD", "DoD", "TrD", "QaD", "QiD", "SxD", "SpD", "OcD", "NoD", "V", "UnV"]
 let cpsIndex = Math.max(0, Math.floor(Math.log10(trueCps) / 3));
 trueCps /= 10 ** (cpsIndex * 3);
 document.getElementById("cps").innerHTML = `CPS (BoM+RA, GS on): ${trueCps.toFixed(3)} ${numberNames[cpsIndex]}`;
 
 let costText = ""
 
-costText += `Note: Undiscounted refers to the cost if you didn't use any of the optional discounts listed above (emg, fh+rb, es+rb), and does not refer to any upgrades that reduce building costs. <br>
-            Initial cost refers to the cost with fh+rb and emg if you had selected it, but does not consider es+rb because that doesn't decrease the initial price you pay for the buildings. <br> <br>`
+costText += `Note: Adjusted cost is the cost with FH+RB and EMG factored in, while base building cost is with those not factored in. <br> <br>`
 
 let costIndex1 = Math.max(0, Math.floor(Math.log10(results[1]) / 3));
 results[1] /= 10 ** (costIndex1 * 3);
-costText += `Initial Building Costs: ${results[1].toFixed(3)} ${numberNames[costIndex1]} <br>`
+costText += `Base Building cost: ${results[1].toFixed(3)} ${numberNames[costIndex1]} <br>`
 
 let costIndex2 = Math.max(0, Math.floor(Math.log10(results[2]) / 3));
 results[2] /= 10 ** (costIndex2 * 3);
-costText += `Building Costs: ${results[2].toFixed(3)} ${numberNames[costIndex2]} <br>`
+costText += `Base Building cost (with you sells) ${results[2].toFixed(3)} ${numberNames[costIndex2]} <br>`
 
 let costIndex3 = Math.max(0, Math.floor(Math.log10(results[3]) / 3));
 results[3] /= 10 ** (costIndex3 * 3);
-costText += `Building Cost (with you sells): ${results[3].toFixed(3)} ${numberNames[costIndex3]} <br>`
+costText += `Adjusted Building cost: ${results[3].toFixed(3)} ${numberNames[costIndex3]} <br>`
 
 let costIndex4 = Math.max(0, Math.floor(Math.log10(results[4]) / 3));
 results[4] /= 10 ** (costIndex4 * 3);
-costText += `Undiscounted Building Cost: ${results[4].toFixed(3)} ${numberNames[costIndex4]} <br>`
+costText += `Adjusted Building cost (with you sells): ${results[4].toFixed(3)} ${numberNames[costIndex4]} <br>`
 
 let costIndex5 = Math.max(0, Math.floor(Math.log10(results[5]) / 3));
 results[5] /= 10 ** (costIndex5 * 3);
-costText += `Undiscounted Building Cost (with you sells): ${results[5].toFixed(3)} ${numberNames[costIndex5]} <br>`
+costText += `Cost of You sells: ${results[5].toFixed(3)} ${numberNames[costIndex5]} <br>`
 
 let costIndex6 = Math.max(0, Math.floor(Math.log10(results[6]) / 3));
 results[6] /= 10 ** (costIndex6 * 3);
-costText += `Cost of You sells: ${results[6].toFixed(3)} ${numberNames[costIndex6]} <br>`
+costText += `Sell All Buildings' gains: ${results[6].toFixed(3)} ${numberNames[costIndex6]} <br>`
 
 document.getElementById("costs").innerHTML = costText;
 });
