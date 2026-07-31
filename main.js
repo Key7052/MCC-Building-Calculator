@@ -104,7 +104,7 @@ let youSellsCost = costs[19]*0.7125*buyYous+costs[19]*0.884420746407
     }
     let increaseBuilding = nextBuildings.indexOf(Math.max(...nextBuildings))
     let costBeforeBuy = buildingCostTotal*(1-esrb/(emg*fhrb))+youCostTotal
-    if (costBeforeBuy * buyHundredMult > idealBuildingCost) {
+    if (costBeforeBuy * 5e7 > idealBuildingCost) {
     buildingCostTotal +=  costs[increaseBuilding]*0.884420746407*emg*fhrb-costs[increaseBuilding]*0.884420746407*esrb
     if (increaseBuilding == 19) {
     youCostTotal += costs[increaseBuilding]*0.884420746407*0.7125*buyYous
