@@ -104,7 +104,7 @@ let youSellsCost = costs[19]*0.7125*buyYous+costs[19]*0.884420746407
     }
     let increaseBuilding = nextBuildings.indexOf(Math.max(...nextBuildings))
     let costBeforeBuy = buildingCostTotal*(1-esrb/(emg*fhrb))+youCostTotal
-    if (costBeforeBuy * 5e7 > idealBuildingCost) {
+    if (costBeforeBuy * 1e8 > idealBuildingCost) {
     buildingCostTotal +=  costs[increaseBuilding]*0.884420746407*emg*fhrb-costs[increaseBuilding]*0.884420746407*esrb
     if (increaseBuilding == 19) {
     youCostTotal += costs[increaseBuilding]*0.884420746407*0.7125*buyYous
@@ -229,6 +229,9 @@ let milkPercent = document.getElementById("achievements").value/25
 for (i=0; i < milkMults.length; i++) {
     milkMult *= 1+(milkPercent*milkMults[i])
 }
+let currentTime = new Date();
+// years since 2013, minus 1 if its before august 8 and minus 0 if after/during august 8
+let birthdayCookie = currentTime.getFullYear() - 2013 - (currentTime.getMonth() < 7 || (currentTime.getMonth() === 7 && currentTime.getDate() < 8) ? 1 : 0); 
 let trueCps =
     (getCPS(results[0], jscUpgrades, cbUpgrades, ivUpgrades, youUpgrades) + 9)
     * 1.05 ** cookieUpgrades
@@ -236,8 +239,9 @@ let trueCps =
     * pl
     * ambergris
     * (1 + (1 - (1 - Math.min(days / 100, 1)) ** 3) / 10)
-    * 25716.13
-    * milkMult;
+    * 22960.83
+    * milkMult
+    * birthdayCookie;
 let cpsIndex = Math.max(0, Math.floor(Math.log10(trueCps) / 3));
 trueCps /= 10 ** (cpsIndex * 3);
 document.getElementById("cps").innerHTML = `CPS (BoM+RA, GS on): ${trueCps.toFixed(3)} ${numberNames[cpsIndex]}`;
